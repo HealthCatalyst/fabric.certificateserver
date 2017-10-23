@@ -19,4 +19,15 @@ else
 	echo "certificates already exist so we're not regenerating them"
 fi
 
+MyHostName="${CERT_HOSTNAME:-$(hostname)}"
+
+echo "you can download the client certificate from this url"
+echo "http://$MyHostName:8081/client/fabric_rabbitmq_client_cert.p12"
+
+echo "if you want, you can download the CA (Certificate Authority) cert from this url"
+echo "http://$MyHostName:8081/client/fabric_rabbitmq_ca_cert.p12"
+
+
+echo "starting web server"
+
 exec "$@"
