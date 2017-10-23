@@ -12,11 +12,23 @@ echo "-------"
 if [ ! -f "/opt/healthcatalyst/client/cert.pem" ]
 then
 	echo "no certificates found so regenerating them"
+
+	# make sure CertHostName and CertPassword are set
+	if [ -z "${CERT_HOSTNAME:-}" ]; then
+		echo "CERT_HOSTNAME must be set"
+    	exit 1
+	fi
+	if [ -z "${CERT_PASSWORD:-}" ]; then
+		echo "CERT_PASSWORD must be set"
+    	exit 1
+	fi
+
 	/bin/bash /opt/healthcatalyst/setupca.sh \
 		&& /bin/bash /opt/healthcatalyst/generateservercert.sh \
 		&& /bin/bash /opt/healthcatalyst/generateclientcert.sh \
-		&& cp /opt/healthcatalyst/client/fabric_client_cert.p12 /app/public/ \
-		&& cp /opt/healthcatalyst/client/fabric_ca_cert.p12 /app/public/
+		&& mkdir -p /app/public/client/ \
+		&& cp /opt/healthcatalyst/client/fabric_client_cert.p12 /app/public/client/ \
+		&& cp /opt/healthcatalyst/client/fabric_ca_cert.p12 /app/public/client/
 else
 	echo "certificates already exist so we're not regenerating them"
 fi
