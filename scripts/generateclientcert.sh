@@ -22,8 +22,8 @@ openssl ca -config openssl.cnf -in /opt/healthcatalyst/client/req.pem -out /opt/
 
 # Create a key store that will contain our certificate.
 cd /opt/healthcatalyst/client
-openssl pkcs12 -export -out fabric_rabbitmq_client_cert.p12 -in cert.pem -inkey key.pem -passout pass:$CertPassword
+openssl pkcs12 -export -out fabric_client_cert.p12 -in cert.pem -inkey key.pem -passout pass:$CertPassword
 
 # Create a trust store that will contain the certificate of our CA.
 # https://stackoverflow.com/questions/23935820/how-can-i-create-a-p12-file-without-a-private-key
-openssl pkcs12 -nokeys -export -out fabric_rabbitmq_ca_cert.p12 -in /opt/healthcatalyst/testca/cacert.pem -inkey /opt/healthcatalyst/testca/private/cakey.pem -passout pass:$CertPassword
+openssl pkcs12 -nokeys -export -out fabric_ca_cert.p12 -in /opt/healthcatalyst/testca/cacert.pem -inkey /opt/healthcatalyst/testca/private/cakey.pem -passout pass:$CertPassword
