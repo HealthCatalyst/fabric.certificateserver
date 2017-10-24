@@ -25,15 +25,16 @@ then
 
 	/bin/bash /opt/healthcatalyst/setupca.sh \
 		&& /bin/bash /opt/healthcatalyst/generateservercert.sh \
-		&& /bin/bash /opt/healthcatalyst/generateclientcert.sh \
-		&& mkdir -p /app/public/client/ \
-		&& cp /opt/healthcatalyst/client/fabric_client_cert.p12 /app/public/client/ \
-		&& cp /opt/healthcatalyst/client/fabric_ca_cert.p12 /app/public/client/
+		&& /bin/bash /opt/healthcatalyst/generateclientcert.sh 
 else
 	echo "certificates already exist so we're not regenerating them"
 fi
 
 MyHostName="${CERT_HOSTNAME:-$(hostname)}"
+
+mkdir -p /app/public/client/ \
+	&& cp /opt/healthcatalyst/client/fabric_client_cert.p12 /app/public/client/ \
+	&& cp /opt/healthcatalyst/client/fabric_ca_cert.p12 /app/public/client/
 
 echo "you can download the client certificate from this url"
 echo "http://$MyHostName:8081/client/fabric_client_cert.p12"
