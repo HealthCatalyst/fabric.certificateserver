@@ -3,7 +3,18 @@
 set -eu
 
 # https://stackoverflow.com/questions/39296472/shell-script-how-to-check-if-an-environment-variable-exists-and-get-its-value
-CertPassword="${CERT_PASSWORD:-roboconf}"
+CertPassword="${CERT_PASSWORD:-}"
+CertUser="$1"
+
+if [ -z "${CERT_PASSWORD:-}" ]; then
+    echo "CERT_PASSWORD must be set"
+    exit 1
+fi
+
+if [ -z "${CertUser:-}" ]; then
+    echo "No username parameter passed fo generateclientcert.sh"
+    exit 1
+fi
 
 #
 # Prepare the client's stuff.
@@ -14,7 +25,7 @@ cd /opt/healthcatalyst/client
 openssl genrsa -out key.pem 2048
 
 # Generate a certificate from our private key.
-openssl req -new -key key.pem -out req.pem -outform PEM -subj /CN=fabricuser/O=HealthCatalyst/ -nodes
+openssl req -new -key key.pem -out req.pem -outform PEM -subj /CN=$CertUser/O=HealthCatalyst/ -nodes
 
 # Sign the certificate with our CA.
 cd /opt/healthcatalyst/testca
@@ -22,7 +33,7 @@ openssl ca -config openssl.cnf -in /opt/healthcatalyst/client/req.pem -out /opt/
 
 # Create a key store that will contain our certificate.
 cd /opt/healthcatalyst/client
-openssl pkcs12 -export -out fabric_client_cert.p12 -in cert.pem -inkey key.pem -passout pass:$CertPassword
+openssl pkcs12 -export -out "$CertUser"_client_cert.p12 -in cert.pem -inkey key.pem -passout pass:$CertPassword
 
 # Create a trust store that will contain the certificate of our CA.
 # https://stackoverflow.com/questions/23935820/how-can-i-create-a-p12-file-without-a-private-key
