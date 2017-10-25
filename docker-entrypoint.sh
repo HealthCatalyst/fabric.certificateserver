@@ -31,7 +31,10 @@ then
 		&& cp /opt/healthcatalyst/testca/cacert.pem /opt/certs/testca \
 		&& mkdir -p /opt/certs/server \
 		&& cp /opt/healthcatalyst/server/cert.pem /opt/certs/server/ \
-		&& cp /opt/healthcatalyst/server/key.pem /opt/certs/server/
+		&& cp /opt/healthcatalyst/server/key.pem /opt/certs/server/ \
+		&& mkdir -p /opt/certs/client \
+		&& cp /opt/healthcatalyst/client/*.p12 /opt/certs/client/
+		
 else
 	echo "certificates already exist so we're not regenerating them"
 fi
@@ -40,7 +43,7 @@ MyHostName="${CERT_HOSTNAME:-$(hostname)}"
 
 # copy only the client certs to the web server folder for download
 mkdir -p /app/public/client/ \
-	&& cp /opt/healthcatalyst/client/*.p12 /app/public/client/
+	&& cp /opt/certs/client/*.p12 /app/public/client/
 
 echo "you can download the client certificate from this url"
 echo "http://$MyHostName:8081/client/fabricrabbitmquser_client_cert.p12"
