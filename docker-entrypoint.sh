@@ -4,13 +4,13 @@ set -eu
 
 echo "running docker-entrypoint.sh"
 
-echo "contents of /opt/healthcatalyst/client/"
-mkdir -p /opt/healthcatalyst/client/
+echo "contents of /opt/certs/server/"
+mkdir -p /opt/certs/server/
 echo "-------"
-ls /opt/healthcatalyst/client/
+ls /opt/certs/server/
 echo "-------"
 
-if [ ! -f "/opt/healthcatalyst/client/cert.pem" ]
+if [[ ! -f "/opt/certs/server/cert.pem" ]]
 then
 	echo "no certificates found so regenerating them"
 
@@ -26,13 +26,19 @@ then
 
 	/bin/bash /opt/healthcatalyst/setupca.sh \
 		&& /bin/bash /opt/healthcatalyst/generateservercert.sh \
-		&& /bin/bash /opt/healthcatalyst/generateclientcert.sh fabricrabbitmquser
+		&& /bin/bash /opt/healthcatalyst/generateclientcert.sh fabricrabbitmquser \
+		&& mkdir -p /opt/certs/testca \
+		&& cp /opt/healthcatalyst/testca/cacert.pem /opt/certs/testca \
+		&& mkdir -p /opt/certs/server \
+		&& cp /opt/healthcatalyst/server/cert.pem /opt/certs/server/ \
+		&& cp /opt/healthcatalyst/server/key.pem /opt/certs/server/
 else
 	echo "certificates already exist so we're not regenerating them"
 fi
 
 MyHostName="${CERT_HOSTNAME:-$(hostname)}"
 
+# copy only the client certs to the web server folder for download
 mkdir -p /app/public/client/ \
 	&& cp /opt/healthcatalyst/client/*.p12 /app/public/client/
 
