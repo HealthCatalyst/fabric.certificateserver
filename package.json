@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "description": "A Express.js based webserver which only serves static files",
     "main": "mini-webserver.js",
+    "license": "Apache 2.0",
     "scripts": {},
     "repository": {
         "type": "git",
@@ -10,6 +11,7 @@
     },
     "dependencies": {
         "express": "^4.15.3",
-        "morgan": "^1.2.2"
+        "morgan": "^1.2.2",
+        "serve-index": "^1.9.1"
     }
 }
