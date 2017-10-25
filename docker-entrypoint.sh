@@ -4,8 +4,15 @@ set -eu
 
 echo "running docker-entrypoint.sh"
 
+if [[ ! -d "/opt/certs" ]]; then
+	echo "/opt/certs folder is not present.  Be sure to attach a volume."
+	exit 1
+fi
+
+
 echo "contents of /opt/certs/server/"
 mkdir -p /opt/certs/server/
+mkdir -p /opt/certs/client
 echo "-------"
 ls /opt/certs/server/
 echo "-------"
