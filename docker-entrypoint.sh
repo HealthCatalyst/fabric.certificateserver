@@ -5,6 +5,7 @@ set -eu
 echo "running docker-entrypoint.sh"
 
 echo "contents of /opt/healthcatalyst/client/"
+mkdir -p /opt/healthcatalyst/client/
 echo "-------"
 ls /opt/healthcatalyst/client/
 echo "-------"
