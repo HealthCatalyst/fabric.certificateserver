@@ -3,15 +3,21 @@
 set -eu
 
 # https://stackoverflow.com/questions/39296472/shell-script-how-to-check-if-an-environment-variable-exists-and-get-its-value
+if [[ ! -z "${CERT_PASSWORD_FILE:-}" ]]
+then
+    echo "CERT_PASSWORD_FILE is set so reading from $CERT_PASSWORD_FILE"
+    CERT_PASSWORD=$(cat $CERT_PASSWORD_FILE)
+fi
 CertPassword="${CERT_PASSWORD:-}"
-CertUser="$1"
 
-if [ -z "${CERT_PASSWORD:-}" ]; then
+CertUser="${CLIENT_CERT_USERNAME:-$1}"
+
+if [[ -z "${CERT_PASSWORD:-}" ]]; then
     echo "CERT_PASSWORD must be set"
     exit 1
 fi
 
-if [ -z "${CertUser:-}" ]; then
+if [[ -z "${CertUser:-}" ]]; then
     echo "No username parameter passed fo generateclientcert.sh"
     exit 1
 fi

@@ -3,8 +3,20 @@
 set -eu
 
 # https://stackoverflow.com/questions/39296472/shell-script-how-to-check-if-an-environment-variable-exists-and-get-its-value
-CertPassword="${CERT_PASSWORD:-roboconf}"
-MyHostName="${CERT_HOSTNAME:-$(hostname)}"
+if [[ ! -z "${CERT_PASSWORD_FILE:-}" ]]
+then
+    echo "CERT_PASSWORD_FILE is set so reading from $CERT_PASSWORD_FILE"
+    CERT_PASSWORD=$(cat $CERT_PASSWORD_FILE)
+fi
+
+CertPassword="${CERT_PASSWORD:-}"
+
+if [[ ! -z "${CERT_HOSTNAME_FILE:-}" ]]
+then
+    echo "CERT_HOSTNAME_FILE is set so reading from $CERT_HOSTNAME_FILE"
+    CERT_HOSTNAME=$(cat $CERT_HOSTNAME_FILE)
+fi
+MyHostName="${CERT_HOSTNAME:-}"
 
 #
 # Prepare the certificate authority (self-signed).
