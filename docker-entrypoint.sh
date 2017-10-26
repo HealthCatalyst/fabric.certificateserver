@@ -9,7 +9,6 @@ if [[ ! -d "/opt/certs" ]]; then
 	exit 1
 fi
 
-
 echo "contents of /opt/certs/server/"
 mkdir -p /opt/certs/server/
 mkdir -p /opt/certs/client
@@ -22,11 +21,24 @@ then
 	echo "no certificates found so regenerating them"
 
 	# make sure CertHostName and CertPassword are set
-	if [ -z "${CERT_HOSTNAME:-}" ]; then
+	if [[ ! -z "${CERT_HOSTNAME_FILE:-}" ]]
+	then
+		echo "CERT_HOSTNAME_FILE is set so reading from $CERT_HOSTNAME_FILE"
+		CERT_HOSTNAME=$(cat $CERT_HOSTNAME_FILE)
+	fi
+
+	if [[ -z "${CERT_HOSTNAME:-}" ]]; then
 		echo "CERT_HOSTNAME must be set"
     	exit 1
 	fi
-	if [ -z "${CERT_PASSWORD:-}" ]; then
+
+	if [[ ! -z "${CERT_PASSWORD_FILE:-}" ]]
+	then
+		echo "CERT_PASSWORD_FILE is set so reading from $CERT_PASSWORD_FILE"
+		CERT_PASSWORD=$(cat $CERT_PASSWORD_FILE)
+	fi
+
+	if [[ -z "${CERT_PASSWORD:-}" ]]; then
 		echo "CERT_PASSWORD must be set"
     	exit 1
 	fi
